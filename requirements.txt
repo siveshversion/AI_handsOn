@@ -1,14 +1,29 @@
+# Flask Web Framework
 Flask>=3.0.0
 Flask-SocketIO>=5.3.0
-opencv-python-headless>=4.9.0
-easyocr>=1.7.0
+
+# Computer Vision & Image Processing
+opencv-python>=4.9.0
 Pillow>=10.2.0
 numpy>=1.26.0
+
+# OCR Engines
+easyocr>=1.7.0
+pytesseract>=0.3.10
+
+# TrOCR (Best for handwriting) - Downloads ~1.33GB model on first run
+transformers>=4.35.0
+--index-url https://download.pytorch.org/whl/cu118
 torch>=2.1.0
 torchvision>=0.16.0
-opencv-python
-easyocr
-pytesseract
-Pillow
-matplotlib
-numpy
+
+# Utilities
+requests>=2.31.0
+matplotlib>=3.8.0
+
+# Installation Notes:
+# 1. TrOCR first run downloads microsoft/trocr-base-handwritten model (~1.33GB)
+# 2. GPU-enabled PyTorch included above for CUDA acceleration
+# 3. Set HF_TOKEN environment variable for faster Hugging Face downloads
+# 4. PaddlePaddle (optional): pip install paddlepaddle && pip install paddleocr
+# 5. Tesseract binary required: https://github.com/tesseract-ocr/tesseract

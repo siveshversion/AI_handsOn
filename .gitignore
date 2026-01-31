@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+aI_handson.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads folder (contains user files)
+uploads/
+
+# Logs
+*.log
+
+# Environment variables
+.env
