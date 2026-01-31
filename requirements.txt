@@ -13,7 +13,6 @@ pytesseract>=0.3.10
 
 # TrOCR (Best for handwriting) - Downloads ~1.33GB model on first run
 transformers>=4.35.0
---index-url https://download.pytorch.org/whl/cu121
 torch>=2.1.0
 torchvision>=0.16.0
 
@@ -23,7 +22,7 @@ matplotlib>=3.8.0
 
 # Installation Notes:
 # 1. TrOCR first run downloads microsoft/trocr-base-handwritten model (~1.33GB)
-# 2. GPU-enabled PyTorch included above for CUDA acceleration
-# 3. Set HF_TOKEN environment variable for faster Hugging Face downloads
+# 2. For GPU: First install CUDA Toolkit, then: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+# 3. Set HF_TOKEN environment variable: set 
 # 4. PaddlePaddle (optional): pip install paddlepaddle && pip install paddleocr
 # 5. Tesseract binary required: https://github.com/tesseract-ocr/tesseract

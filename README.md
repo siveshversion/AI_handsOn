@@ -42,7 +42,7 @@ Flask web application for file uploads with advanced handwriting OCR recognition
 
 Set environment variable for faster downloads:
 ```bash
-set HF_TOKEN=your_huggingface_token
+
 ```
 
 ## File Structure
@@ -53,5 +53,12 @@ AI_handsOn/
 ├── trocr_ocr.py           # TrOCR handwriting recognition
 ├── enhanced_ocr.py        # Multi-engine OCR system
 ├── requirements.txt       # Dependencies
+├── templates/             # HTML templates
+│   └── index.html         # Main web interface
+├── static/                # Static assets
+│   ├── css/
+│   │   └── style.css      # Stylesheet
+│   └── js/
+│       └── app.js         # JavaScript functionality
 └── uploads/               # Student file storage
 ```

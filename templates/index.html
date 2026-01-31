@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hands-On Session Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Hands-On Session Portal</h1>
+            <p>Upload your files organized by student folders</p>
+            <div class="stats">
+                <div class="stat-box pulse">
+                    <div class="stat-number" id="userCount">0</div>
+                    <div class="stat-label">Live Users</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">{{ file_count }}</div>
+                    <div class="stat-label">Files</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="upload-section">
+                <h3>📤 Upload Files</h3>
+                <form method="post" enctype="multipart/form-data" id="uploadForm">
+                    <div class="form-group">
+                        <label>🎓 Roll Number / Student ID:</label>
+                        <input type="text" name="roll_no" class="form-input" placeholder="Enter your roll number" required>
+                    </div>
+                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                        <h4>📁 Drop your files here or click to browse</h4>
+                        <p>Maximum file size: 54MB</p>
+                        <input type="file" name="file" id="fileInput" class="file-input" required>
+                    </div>
+                    <button type="submit" class="upload-btn" id="uploadBtn">🚀 Upload File</button>
+                    
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p class="progress-text">
+                            <span class="spinner"></span>
+                            <span id="progressText">Uploading...</span>
+                        </p>
+                    </div>
+                </form>
+                {% if message %}
+                    <div class="message">{{ message|safe }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="files-section">
+                <h3>📋 Student Files</h3>
+                
+                <div class="ocr-result" id="ocrResult">
+                    <button class="close-btn" onclick="closeOcrResult()" title="Close">&times;</button>
+                    <h4>📝 OCR Results - Select All (Ctrl+A) and Copy (Ctrl+C):</h4>
+                    <textarea class="ocr-text" id="ocrText" readonly></textarea>
+                </div>
+                
+                <div class="file-list">
+                    {% for file in files %}
+                    {% if '.' in file.split('/')[-1] %}
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-name">{{ file.split('/')[-1] }}</div>
+                            <div class="file-path">📁 {{ file }}</div>
+                        </div>
+                        <button class="download-btn" onclick="downloadFile('{{ file }}')">⬇️ Download</button>
+                        {% if file.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tiff')) %}
+                        <button class="download-btn" onclick="analyzeHandwriting('{{ file }}')" style="background: #17a2b8;">🔍 OCR</button>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
