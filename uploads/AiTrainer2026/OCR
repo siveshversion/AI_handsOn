@@ -1,0 +1,31 @@
+# CODE BLOCK 6: Reading a Full Sentence (OCR)
+# Note: This uses a pre-trained model because reading lines requires 
+# complex "Sequence" models (CRNNs), not just simple "Classifiers".
+
+# 1. Install the library (this takes about 30 seconds)
+
+import easyocr
+import cv2
+import matplotlib.pyplot as plt
+
+# 2. Initialize the Reader (We tell it to look for English 'en')
+# The first time you run this, it will download the detection model.
+reader = easyocr.Reader(['en']) 
+
+# 3. Define the file you uploaded
+image_path = 'my_handwriting.jpg'
+
+# 4. Read the text
+# detail=0 means "just give me the text", don't give me the math coordinates
+results = reader.readtext(image_path, detail=0)
+
+# 5. Show the Image
+img = cv2.imread(image_path)
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.axis('off')
+plt.show()
+
+# 6. Print what the AI found
+print("\n--- AI READS ---")
+for line in results:
+    print(line)
