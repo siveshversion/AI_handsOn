@@ -13,7 +13,7 @@ pytesseract>=0.3.10
 
 # TrOCR (Best for handwriting) - Downloads ~1.33GB model on first run
 transformers>=4.35.0
---index-url https://download.pytorch.org/whl/cu118
+--index-url https://download.pytorch.org/whl/cu121
 torch>=2.1.0
 torchvision>=0.16.0
 
