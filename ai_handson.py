@@ -4,14 +4,26 @@ import os
 from datetime import datetime
 
 try:
-    from trocr_ocr import recognize_handwriting
+    from simple_ocr import recognize_handwriting
     OCR_AVAILABLE = True
 except ImportError:
     try:
-        from enhanced_ocr import recognize_handwriting
+        from google_translate_ocr import recognize_handwriting
         OCR_AVAILABLE = True
     except ImportError:
-        OCR_AVAILABLE = False
+        try:
+            from google_vision_ocr import recognize_handwriting
+            OCR_AVAILABLE = True
+        except ImportError:
+            try:
+                from trocr_ocr import recognize_handwriting
+                OCR_AVAILABLE = True
+            except ImportError:
+                try:
+                    from enhanced_ocr import recognize_handwriting
+                    OCR_AVAILABLE = True
+                except ImportError:
+                    OCR_AVAILABLE = False
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hands-on-session'

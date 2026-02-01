@@ -1,14 +1,16 @@
 # AI Hands-On Portal
 
-Flask web application for file uploads with advanced handwriting OCR recognition using TrOCR, EasyOCR, and Tesseract.
+Flask web application for file uploads with handwriting OCR recognition using EasyOCR.
 
 ## Features
 
 - 📁 Student file upload with roll number validation
-- 🔍 Advanced handwriting OCR with multiple engines
+- 🔍 Handwriting OCR with image preprocessing
 - 👥 Live user count tracking
 - 📋 Clipboard integration for OCR results
-- 🚀 GPU acceleration support
+- 🔍 Search functionality for files and students
+- 🗑️ File deletion with confirmation
+- 📱 Mobile-responsive design
 
 ## Quick Start
 
@@ -17,41 +19,25 @@ Flask web application for file uploads with advanced handwriting OCR recognition
    pip install -r requirements.txt
    ```
 
-2. **For GPU acceleration (optional):**
-   - Install [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads)
-   - Reinstall PyTorch with CUDA:
-     ```bash
-     pip uninstall torch torchvision
-     pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-     ```
-
-3. **Run the application:**
+2. **Run the application:**
    ```bash
    python AI_handsOn.py
    ```
 
-4. **Access:** http://localhost:5000
+3. **Access:** http://localhost:5000
 
-## OCR Engines
+## OCR Engine
 
-- **TrOCR**: Transformer-based handwriting recognition (1.33GB model)
-- **EasyOCR**: Multi-language text detection
-- **Tesseract**: Traditional OCR engine
-
-## GPU Setup
-
-Set environment variable for faster downloads:
-```bash
-
-```
+- **EasyOCR**: Lightweight OCR engine with handwriting support
+- **Preprocessing**: Image upscaling and thresholding for better recognition
+- **No GPU required**: Runs efficiently on CPU
 
 ## File Structure
 
 ```
 AI_handsOn/
 ├── AI_handsOn.py          # Main Flask application
-├── trocr_ocr.py           # TrOCR handwriting recognition
-├── enhanced_ocr.py        # Multi-engine OCR system
+├── simple_ocr.py          # EasyOCR handwriting recognition
 ├── requirements.txt       # Dependencies
 ├── templates/             # HTML templates
 │   └── index.html         # Main web interface
