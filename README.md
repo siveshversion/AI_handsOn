@@ -34,7 +34,6 @@ Flask web application for file uploads with handwriting OCR recognition using Go
 ## OCR Engine
 
 - **Google Gemini AI**: Primary OCR engine using gemini-3-pro-preview model
-- **EasyOCR**: Fallback OCR engine for basic handwriting recognition
 - **No GPU required**: Runs efficiently on CPU
 
 ## File Structure
@@ -43,7 +42,6 @@ Flask web application for file uploads with handwriting OCR recognition using Go
 AI_handsOn/
 ├── AI_handsOn.py          # Main Flask application
 ├── gemini_ocr.py          # Google Gemini AI OCR module
-├── simple_ocr.py          # EasyOCR fallback module
 ├── requirements.txt       # Dependencies
 ├── templates/             # HTML templates
 │   └── index.html         # Main web interface
