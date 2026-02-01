@@ -2,16 +2,9 @@ from flask import Flask, request, render_template, send_from_directory, jsonify
 from flask_socketio import SocketIO, emit
 import os
 from datetime import datetime
+from gemini_ocr import recognize_handwriting
+OCR_AVAILABLE = True
 
-try:
-    from gemini_ocr import recognize_handwriting
-    OCR_AVAILABLE = True
-except ImportError:
-    try:
-        from simple_ocr import recognize_handwriting
-        OCR_AVAILABLE = True
-    except ImportError:
-        OCR_AVAILABLE = False
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hands-on-session'
