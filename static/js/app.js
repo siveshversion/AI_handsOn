@@ -112,6 +112,7 @@ function analyzeHandwriting(filename) {
             }, 1000);
             
             if (data && data.error) {
+                console.log('OCR Error:', data.error);
                 alert('❌ OCR Error: ' + data.error);
                 return;
             }
@@ -131,9 +132,11 @@ function analyzeHandwriting(filename) {
                     document.getElementById('ocrText').select();
                     message += '\\n📋 Results displayed below - Select text and copy!';
                 }
+                console.log('OCR Results:', data.texts);
                 alert(message);
             } else {
                 message += 'No text detected. Try:\\n• Better lighting\\n• Darker pen/pencil\\n• Clearer writing';
+                console.log('No text detected');
                 alert(message);
             }
         })
@@ -141,6 +144,7 @@ function analyzeHandwriting(filename) {
             clearInterval(interval);
             btn.innerHTML = originalText;
             allOcrBtns.forEach(b => b.disabled = false);
+            console.log('OCR Error:', error.message);
             alert('❌ Error: ' + (error.message || 'Unknown error'));
         });
 }

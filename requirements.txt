@@ -7,12 +7,15 @@ opencv-python>=4.9.0
 Pillow>=10.2.0
 numpy>=1.26.0
 
-# OCR Engine
-easyocr>=1.7.0
+# Google Gemini AI
+google-genai>=1.0.0
 
 # HTTP Requests
 requests>=2.31.0
 
+# OCR Engine (Fallback)
+easyocr>=1.7.0
+
 # Installation Notes:
-# 1. EasyOCR will download models on first run
-# 2. For better handwriting recognition, ensure good image quality
+# 1. Set GEMINI_API_KEY environment variable
+# 2. EasyOCR used as fallback if Gemini fails

@@ -4,26 +4,14 @@ import os
 from datetime import datetime
 
 try:
-    from simple_ocr import recognize_handwriting
+    from gemini_ocr import recognize_handwriting
     OCR_AVAILABLE = True
 except ImportError:
     try:
-        from google_translate_ocr import recognize_handwriting
+        from simple_ocr import recognize_handwriting
         OCR_AVAILABLE = True
     except ImportError:
-        try:
-            from google_vision_ocr import recognize_handwriting
-            OCR_AVAILABLE = True
-        except ImportError:
-            try:
-                from trocr_ocr import recognize_handwriting
-                OCR_AVAILABLE = True
-            except ImportError:
-                try:
-                    from enhanced_ocr import recognize_handwriting
-                    OCR_AVAILABLE = True
-                except ImportError:
-                    OCR_AVAILABLE = False
+        OCR_AVAILABLE = False
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hands-on-session'
@@ -33,6 +21,10 @@ app.config['MAX_CONTENT_LENGTH'] = 54 * 1024 * 1024
 
 live_users = 0
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static', 'favicon.ico')
 
 
 
