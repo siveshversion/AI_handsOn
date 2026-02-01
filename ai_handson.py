@@ -59,6 +59,18 @@ def ocr_file(filename):
 def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
+@app.route('/delete/<path:filename>', methods=['DELETE'])
+def delete_file(filename):
+    try:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            return jsonify({"success": True, "message": "File deleted successfully"})
+        else:
+            return jsonify({"success": False, "error": "File not found"})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
 @socketio.on('user_connected')
 def handle_user_connected():
     global live_users

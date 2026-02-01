@@ -42,6 +42,49 @@ document.getElementById('uploadForm').addEventListener('submit', function() {
     }, 200);
 });
 
+function deleteFile(filename) {
+    if (confirm('Are you sure you want to delete "' + filename.split('/').pop() + '"?')) {
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        
+        btn.innerHTML = '🔄 Deleting...';
+        btn.disabled = true;
+        
+        fetch('/delete/' + encodeURIComponent(filename), { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('❌ Delete Error: ' + (data.error || 'Unknown error'));
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            })
+            .catch(error => {
+                alert('❌ Error: ' + error.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+    }
+}
+
+function filterFiles() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const fileItems = document.querySelectorAll('.file-item');
+    
+    fileItems.forEach(item => {
+        const filename = item.getAttribute('data-filename');
+        const student = item.getAttribute('data-student');
+        
+        if (filename.includes(searchTerm) || student.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
 function analyzeHandwriting(filename) {
     const btn = event.target;
     const originalText = btn.innerHTML;
@@ -51,8 +94,8 @@ function analyzeHandwriting(filename) {
     
     let progress = 0;
     const updateProgress = () => {
-        progress += Math.random() * 20;
-        if (progress > 95) progress = 95;
+        progress += Math.random() * 10;
+        if (progress > 90) progress = 90;
         btn.innerHTML = '🔄 Analyzing... ' + Math.round(progress) + '%';
     };
     
@@ -62,8 +105,11 @@ function analyzeHandwriting(filename) {
         .then(response => response.json())
         .then(data => {
             clearInterval(interval);
-            btn.innerHTML = originalText;
-            allOcrBtns.forEach(b => b.disabled = false);
+            btn.innerHTML = '✅ Complete!';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                allOcrBtns.forEach(b => b.disabled = false);
+            }, 1000);
             
             if (data && data.error) {
                 alert('❌ OCR Error: ' + data.error);

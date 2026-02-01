@@ -56,24 +56,29 @@
             <div class="files-section">
                 <h3>📋 Student Files</h3>
                 
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="🔍 Search files or students..." onkeyup="filterFiles()">
+                </div>
+                
                 <div class="ocr-result" id="ocrResult">
                     <button class="close-btn" onclick="closeOcrResult()" title="Close">&times;</button>
                     <h4>📝 OCR Results - Select All (Ctrl+A) and Copy (Ctrl+C):</h4>
                     <textarea class="ocr-text" id="ocrText" readonly></textarea>
                 </div>
                 
-                <div class="file-list">
+                <div class="file-list" id="fileList">
                     {% for file in files %}
                     {% if '.' in file.split('/')[-1] %}
-                    <div class="file-item">
+                    <div class="file-item" data-filename="{{ file.split('/')[-1].lower() }}" data-student="{{ file.split('/')[0].lower() }}">
                         <div class="file-info">
                             <div class="file-name">{{ file.split('/')[-1] }}</div>
-                            <div class="file-path">📁 {{ file }}</div>
+                            <div class="file-path">👤 Student: <strong>{{ file.split('/')[0] }}</strong> | 📁 {{ file }}</div>
                         </div>
                         <button class="download-btn" onclick="downloadFile('{{ file }}')">⬇️ Download</button>
                         {% if file.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tiff')) %}
                         <button class="download-btn" onclick="analyzeHandwriting('{{ file }}')" style="background: #17a2b8;">🔍 OCR</button>
                         {% endif %}
+                        <button class="download-btn" onclick="deleteFile('{{ file }}')" style="background: #dc3545;">🗑️ Delete</button>
                     </div>
                     {% endif %}
                     {% endfor %}

@@ -25,7 +25,7 @@ except ImportError:
     TESSERACT_AVAILABLE = False
 
 def preprocess_for_trocr(image_path):
-    """Preprocessing optimized for TrOCR handwriting recognition"""
+    """Lightweight preprocessing for faster TrOCR"""
     img = cv2.imread(image_path)
     if img is None:
         return None
@@ -33,19 +33,15 @@ def preprocess_for_trocr(image_path):
     # Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
-    # Aggressive upscaling for handwriting (6x)
+    # Moderate upscaling (4x instead of 10x)
     height, width = gray.shape
-    upscaled = cv2.resize(gray, (width * 6, height * 6), interpolation=cv2.INTER_CUBIC)
+    upscaled = cv2.resize(gray, (width * 4, height * 4), interpolation=cv2.INTER_LINEAR)
     
-    # Enhance contrast
-    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
-    enhanced = clahe.apply(upscaled)
+    # Simple contrast enhancement
+    normalized = cv2.normalize(upscaled, None, 0, 255, cv2.NORM_MINMAX)
     
-    # Slight blur to smooth handwriting
-    blurred = cv2.GaussianBlur(enhanced, (3, 3), 0)
-    
-    # Convert back to PIL Image for TrOCR
-    pil_image = Image.fromarray(blurred).convert('RGB')
+    # Convert to PIL Image
+    pil_image = Image.fromarray(normalized).convert('RGB')
     
     return pil_image
 
@@ -55,22 +51,14 @@ def ocr_with_trocr(image):
         return []
     
     try:
-        # GPU diagnostics
-        print(f"CUDA available: {torch.cuda.is_available()}")
-        if torch.cuda.is_available():
-            print(f"CUDA device count: {torch.cuda.device_count()}")
-            print(f"Current CUDA device: {torch.cuda.current_device()}")
-            print(f"CUDA device name: {torch.cuda.get_device_name(0)}")
+        # Force GPU usage - fail if not available
+        if not torch.cuda.is_available():
+            raise RuntimeError("GPU required but CUDA not available. Install CUDA toolkit and GPU PyTorch")
         
-        # Force GPU if available, otherwise use CPU
-        if torch.cuda.is_available():
-            device = "cuda:0"
-            torch.cuda.set_device(0)
-        else:
-            device = "cpu"
-            print("⚠️ GPU not available. Install CUDA toolkit and GPU-enabled PyTorch:")
-            print("pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118")
-        
+        device = "cuda:0"
+        torch.cuda.set_device(0)
+        print(f"CUDA device count: {torch.cuda.device_count()}")
+        print(f"CUDA device name: {torch.cuda.get_device_name(0)}")
         print(f"Loading TrOCR model on {device}...")
         
         # Load TrOCR model (handwritten text) with fast processor disabled for compatibility
@@ -86,9 +74,14 @@ def ocr_with_trocr(image):
         pixel_values = processor(images=image, return_tensors="pt").pixel_values
         pixel_values = pixel_values.to(device)  # Move input to GPU
         
-        # Generate text
-        with torch.no_grad():  # Save GPU memory
-            generated_ids = model.generate(pixel_values, max_length=50)
+        # Generate text with faster parameters
+        with torch.no_grad():
+            generated_ids = model.generate(
+                pixel_values, 
+                max_length=50,
+                num_beams=3,
+                early_stopping=True
+            )
         
         generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
         
@@ -110,7 +103,9 @@ def ocr_with_easyocr_handwriting(image):
         return []
     
     try:
-        reader = easyocr.Reader(['en'], gpu=True, verbose=False)  # Enable GPU for EasyOCR too
+        reader = easyocr.Reader(['en'], gpu=True, verbose=False)
+        if not reader.gpu:
+            raise RuntimeError("EasyOCR GPU initialization failed")
         
         # Convert PIL to numpy for EasyOCR
         if hasattr(image, 'save'):  # PIL Image
